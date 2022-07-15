@@ -15,6 +15,7 @@ import {RootStackParamList} from 'App';
 import {useAppDispatch} from '../store';
 import axios, {AxiosError} from 'axios';
 import userSlice from '../slices/user';
+import Config from 'react-native-config';
 
 type SignInProps = {
   email: string;
@@ -43,7 +44,7 @@ const SignIn = ({navigation}: SignInScreenProps) => {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`http://localhost:3105/login`, {
+      const response = await axios.post(`${Config.API_URL}/login`, {
         email,
         password,
       });
@@ -54,7 +55,6 @@ const SignIn = ({navigation}: SignInScreenProps) => {
           name: response.data.data.name,
           email: response.data.data.email,
           accessToken: response.data.data.accessToken,
-          refreshToken: response.data.data.refreshToken,
         }),
       );
       await EncryptedStorage.setItem(
