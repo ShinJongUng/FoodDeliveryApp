@@ -1,5 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Platform,
   Pressable,
@@ -12,6 +13,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import styled from '@emotion/native';
+import axios, {AxiosError} from 'axios';
+import Config from 'react-native-config';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -22,6 +25,7 @@ type SignUpProps = {
 };
 
 function SignUp({navigation}: SignUpScreenProps) {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +42,10 @@ function SignUp({navigation}: SignUpScreenProps) {
   const onChangePassword = useCallback((text: any) => {
     setPassword(text.trim());
   }, []);
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
+    if (loading) {
+      return;
+    }
     if (!email || !email.trim()) {
       return Alert.alert('알림', '이메일을 입력해주세요.');
     }
@@ -61,9 +68,24 @@ function SignUp({navigation}: SignUpScreenProps) {
         '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
       );
     }
-    console.log(email, name, password);
-    Alert.alert('알림', '회원가입 되었습니다.');
-  }, [email, name, password]);
+    try {
+      setLoading(true);
+      const response = await axios.post('http://localhost:3105/user', {
+        email,
+        name,
+        password,
+      });
+      Alert.alert('알림', '회원가입 되었습니다.');
+      navigation.navigate('SignIn');
+    } catch (error: any) {
+      if (error.response) {
+        console.error((error as AxiosError).response);
+        Alert.alert('알림', error.response.data.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, email, name, password]);
 
   const canGoNext = email && name && password;
   return (
@@ -116,12 +138,16 @@ function SignUp({navigation}: SignUpScreenProps) {
       </InputWrapperView>
       <ButtonsView>
         <RegisterButton
-          disabled={!canGoNext}
+          disabled={!canGoNext || loading}
           onPress={onSubmit}
           email={email}
           name={name}
           password={password}>
-          <RegisterButtonText>회원가입</RegisterButtonText>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <RegisterButtonText>회원가입</RegisterButtonText>
+          )}
         </RegisterButton>
       </ButtonsView>
     </DismissKeyboardView>
