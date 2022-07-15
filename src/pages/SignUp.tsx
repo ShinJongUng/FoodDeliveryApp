@@ -70,7 +70,7 @@ function SignUp({navigation}: SignUpScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:3105/user', {
+      const response = await axios.post(`${Config.API_URL}/user`, {
         email,
         name,
         password,
