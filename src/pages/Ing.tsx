@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import Geolocation from '@react-native-community/geolocation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LoggedInParamList} from '../../AppInner';
+import {LoggedInParamList} from '../../App';
 
 type IngScreenProps = NativeStackScreenProps<LoggedInParamList, 'Delivery'>;
 
