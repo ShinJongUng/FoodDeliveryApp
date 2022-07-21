@@ -1,4 +1,8 @@
-import React, {useCallback} from 'react';
+
+import * as React from 'react';
+import {Text, View} from 'react-native';
+
+import React, {useCallback, useEffect} from 'react';
 import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
@@ -10,8 +14,25 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import styled from '@emotion/native';
 
 function Settings() {
+  const money = useSelector((state: RootState) => state.user.money);
+  const name = useSelector((state: RootState) => state.user.name);
+
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function getMoney() {
+      const response = await axios.get<{data: number}>(
+        `${Config.API_URL}/showmethemoney`,
+        {
+          headers: {authorization: `Bearer ${accessToken}`},
+        },
+      );
+      dispatch(userSlice.actions.setMoney(response.data.data));
+    }
+    getMoney();
+  }, [accessToken, dispatch]);
+
   const onLogout = useCallback(async () => {
     try {
       await axios.post(
@@ -38,8 +59,18 @@ function Settings() {
     }
   }, [accessToken, dispatch]);
 
+
   return (
     <View>
+      <MoneyView>
+        <MoneyText>
+          {name}님의 수익금{' '}
+          <Text style={{fontWeight: 'bold'}}>
+            {money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          </Text>
+          원
+        </MoneyText>
+      </MoneyView>
       <ButtonZoneView>
         <LoginButton onPress={onLogout}>
           <LoginButtonText>로그아웃</LoginButtonText>
@@ -48,6 +79,14 @@ function Settings() {
     </View>
   );
 }
+
+const MoneyView = styled.View({
+  padding: 20,
+});
+
+const MoneyText = styled.Text({
+  fontSize: 16,
+});
 
 const ButtonZoneView = styled.View({
   alignItems: 'center',
