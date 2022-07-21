@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const initialState = {
   name: '',
@@ -15,7 +15,7 @@ const userSlice = createSlice({
       state.name = action.payload.name;
       state.accessToken = action.payload.accessToken;
     },
-    setAccessToken(state, action) {
+    setAccessToken(state, action: PayloadAction<String>) {
       state.accessToken = action.payload;
     },
     setMoney(state, action) {
@@ -24,6 +24,5 @@ const userSlice = createSlice({
   },
   extraReducers: builder => {},
 });
-
 
 export default userSlice;

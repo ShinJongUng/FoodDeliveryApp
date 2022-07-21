@@ -1,7 +1,3 @@
-
-import * as React from 'react';
-import {Text, View} from 'react-native';
-
 import React, {useCallback, useEffect} from 'react';
 import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import axios, {AxiosError} from 'axios';
@@ -58,7 +54,6 @@ function Settings() {
       console.error(errorResponse);
     }
   }, [accessToken, dispatch]);
-
 
   return (
     <View>
