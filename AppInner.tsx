@@ -20,6 +20,7 @@ import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import {Alert} from 'react-native';
 import orderSlice from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -28,7 +29,7 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const [socket, disconnect] = useSocket();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-
+  usePermissions();
   //git test
   useEffect(() => {
     const callback = (data: any) => {
