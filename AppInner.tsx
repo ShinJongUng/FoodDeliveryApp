@@ -29,6 +29,23 @@ function AppInner() {
   const [socket, disconnect] = useSocket();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
 
+
+  useEffect(() => {
+    const callback = (data: any) => {
+      console.log(data);
+      //dispatch(orderSlice.actions.addOrder(data));
+    };
+    if (socket && isLoggedIn) {
+      socket.emit('acceptOrder', 'hello');
+      socket.on('order', callback);
+    }
+    return () => {
+      if (socket) {
+        socket.off('order', callback);
+      }
+    };
+  }, [isLoggedIn, socket]);
+
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = async () => {
@@ -82,6 +99,7 @@ function AppInner() {
   }, [dispatch, isLoggedIn, socket]);
 
   useEffect(() => {
+
     if (!isLoggedIn) {
       console.log('!isLoggedIn', !isLoggedIn);
       disconnect();
@@ -119,6 +137,7 @@ function AppInner() {
       },
     );
   }, [dispatch]);
+
   return (
     <NavigationContainer>
       {isLoggedIn ? (

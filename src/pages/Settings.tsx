@@ -1,7 +1,7 @@
-<<<<<<< Updated upstream
+
 import * as React from 'react';
 import {Text, View} from 'react-native';
-=======
+
 import React, {useCallback, useEffect} from 'react';
 import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import axios, {AxiosError} from 'axios';
@@ -58,17 +58,10 @@ function Settings() {
       console.error(errorResponse);
     }
   }, [accessToken, dispatch]);
->>>>>>> Stashed changes
 
-const Settings = () => {
+
   return (
     <View>
-<<<<<<< Updated upstream
-      <Text>설정</Text>
-    </View>
-  );
-};
-=======
       <MoneyView>
         <MoneyText>
           {name}님의 수익금{' '}
@@ -112,6 +105,5 @@ const LoginButtonText = styled.Text({
   color: 'white',
   fontSize: 16,
 });
->>>>>>> Stashed changes
 
 export default Settings;
