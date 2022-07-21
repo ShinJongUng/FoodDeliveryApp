@@ -38,6 +38,10 @@ function EachOrder({item}: Props) {
         Alert.alert('알림', errorResponse.data.message);
         dispatch(orderSlice.actions.rejectOrder(item.orderId));
       }
+      if (errorResponse?.status === 419) {
+        // refresh 토큰 시간 지났을 경우
+        //토큰 재발급
+      }
     }
   }, [navigation, dispatch, item, accessToken]);
 
@@ -76,7 +80,7 @@ function EachOrder({item}: Props) {
               <Text style={styles.buttonText}>수락</Text>
             </Pressable>
             <Pressable onPress={onReject} style={styles.rejectButton}>
-              <Text style={styles.buttonText}>거절</Text>
+              <Text style={styles.buttonText}>거절쓰</Text>
             </Pressable>
           </View>
         </View>
